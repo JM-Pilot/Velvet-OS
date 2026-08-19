@@ -1,0 +1,4 @@
+# dont add tools/ to make the repository lighter 
+tools/
+# this too
+bin/
