@@ -1,5 +1,6 @@
 OUTPUT = velvetOS
 KERNEL = kernel
+CONFIG = config
 TOOLS = tools
 BOOT = boot
 BIN = bin
@@ -54,7 +55,8 @@ QEMU_FLAGS = \
 	-M q35,accel=kvm \
 	-cpu host \
 	-d int,cpu_reset -D $(BIN)/QEMU_LOGS.txt \
-	-serial stdio
+	-serial stdio \
+	-no-reboot -no-shutdown
 run-bios: iso
 	qemu-system-x86_64 \
 		-cdrom $(BIN)/$(OUTPUT).iso \

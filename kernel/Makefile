@@ -3,6 +3,7 @@ BIN = ../bin
 CC = x86_64-elf-gcc
 AS = nasm
 LD = x86_64-elf-ld
+OBJCOPY = x86_64-elf-objcopy
 
 # Flags for compiling
 C_FLAGS = \
@@ -39,28 +40,35 @@ LD_FLAGS = \
 # Get Sources
 C_SRCS = $(shell find . -iname "*.c" -printf "%P\n")
 ASM_SRCS = $(shell find . -iname "*.asm" -printf "%P\n")
+PSF_SRCS = $(shell find . -iname "*.psf" -printf "%P\n")
 
 # Make them into Objs
-C_OBJS = $(patsubst %.c, $(BIN)/%.o, $(C_SRCS))
-ASM_OBJS = $(patsubst %.asm, $(BIN)/%.o, $(ASM_SRCS))
+C_OBJS = $(patsubst %.c, $(BIN)/kernel/%.o, $(C_SRCS))
+ASM_OBJS = $(patsubst %.asm, $(BIN)/kernel/%.o, $(ASM_SRCS))
+PSF_OBJS = $(patsubst %.psf, $(BIN)/kernel/%.o, $(PSF_SRCS))
 
 # Link those objs so we can make the kernel
-OBJS = $(C_OBJS) $(ASM_OBJS)
+OBJS = $(C_OBJS) $(ASM_OBJS) $(PSF_OBJS)
 
 all: kernel
 
-$(BIN)/%.o: %.c
+$(BIN)/kernel/%.o: %.c
 	@printf "CC\t%s\n" $(patsubst ../%, %, $@)
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FLAGS) -c $< -o $@
 
-$(BIN)/%.o: %.asm
+$(BIN)/kernel/%.o: %.asm
 	@printf "ASM\t%s\n" $(patsubst ../%, %, $@)
 	@mkdir -p $(dir $@)
 	@$(NASM) -Wall -felf64 $< -o $@
 
-.PHONY: kernel
+$(BIN)/kernel/%.o: %.psf
+	@printf "OBJCOPY %s\n" $(patsubst ../%, %, $@)
+	@mkdir -p $(dir $@)
+	@$(OBJCOPY) -O elf64-x86-64 -B i386 -I binary $< $@
+# 	@readelf -sW $@
 
+.PHONY: kernel
 kernel: $(BIN)/$(OUTPUT)-kernel.elf
 $(BIN)/$(OUTPUT)-kernel.elf: $(OBJS)
 	@printf "LD\t%s\n" $(patsubst ../%, %, $@)
