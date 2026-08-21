@@ -2,3 +2,6 @@
 tools/
 # this too
 bin/
+
+.config
+.config.old

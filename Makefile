@@ -25,8 +25,11 @@ $(TOOLS)/limine-binary:
 	$(MAKE) -C $(TOOLS)/limine-binary
 
 # Compile the kernel ;)
+# while also making config.h
 .PHONY: kernel
-kernel:
+kernel: 
+	@echo "Generating $(KERNEL)/include/config.h"
+	@genconfig config/Kconfig --header-path $(KERNEL)/include/config.h
 	$(MAKE) -C $(KERNEL) OUTPUT="$(OUTPUT)"
 
 # Make the iso
@@ -75,3 +78,13 @@ clean:
 	rm -rf $(BIN)
 clean-tools:
 	rm -rf $(TOOLS)
+clean-config:
+	rm -rf .config .config.old
+clean-all: clean clean-tools clean-config
+
+# Config!
+
+menuconfig:
+	@menuconfig config/Kconfig
+	@echo "Generating $(KERNEL)/include/config.h"
+	@genconfig config/Kconfig --header-path $(KERNEL)/include/config.h

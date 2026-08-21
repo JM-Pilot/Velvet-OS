@@ -1,6 +1,7 @@
 #include <drivers/uart/serial_con.h>
 #include <arch/x86_64/port_io.h>
 #include <stdint.h>
+#include <config.h>
 
 /* we only need to use COM1 because com2 and 
  * others are barely used and its just bloat 
@@ -9,6 +10,7 @@
 
 int serial_con_init(void)
 {
+#ifndef CONFIG_DISABLE_SERIAL_CON
 	/* initialize COM1 */
 
 	/* stop all irq from interrupting */
@@ -41,21 +43,30 @@ int serial_con_init(void)
 	
 	/* clear the screen */
 	serial_con_puts("\033[2J\033[H");
+#endif /* CONFIG_DISABLE_SERIAL_CON */
 	return 0;
 }
 
 char serial_getchar(void)
 {
+#ifndef CONFIG_DISABLE_SERIAL_CON
 	/* we wait until if we get any input */
 	while ((inb(PORT + 5) & 1) == 0);
 	return inb(PORT);
+#else
+	return 0;
+#endif /* CONFIG_DISABLE_SERIAL_CON */
 }
 
 void serial_con_putc(char c)
 {
+#ifndef CONFIG_DISABLE_SERIAL_CON
 	/* wait until we can output */
 	while ((inb(PORT + 5) & 0x20) == 0);
 	outb(PORT, c);
+#else
+	(void)c;
+#endif /* CONFIG_DISABLE_SERIAL_CON */
 }
 
 void serial_con_puts(const char *str)

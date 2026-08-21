@@ -1,0 +1,8 @@
+menu "UART KERNEL CONFIGURATION"
+
+config DISABLE_SERIAL_CON
+	bool "Disable Serial Console (serial_con)"
+	default n
+	help
+		This disables the serial_con
+endmenu

@@ -70,7 +70,7 @@ $(BIN)/kernel/%.o: %.psf
 
 .PHONY: kernel
 kernel: $(BIN)/$(OUTPUT)-kernel.elf
-$(BIN)/$(OUTPUT)-kernel.elf: $(OBJS)
+$(BIN)/$(OUTPUT)-kernel.elf: $(OBJS) include/config.h
 	@printf "LD\t%s\n" $(patsubst ../%, %, $@)
 	@mkdir -p $(dir $@)
 	@$(LD) $(LD_FLAGS) $^ -o $@
