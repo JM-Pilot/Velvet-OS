@@ -5,6 +5,12 @@
 
 #include <stdint.h>
 
+/* KERNEL BUILT IN FONTS */
+extern uint8_t _binary_assets_ter_u16n_psf_start[];
+#define PSF_TER_U16N _binary_assets_ter_u16n_psf_start
+extern uint8_t _binary_assets_ter_u22n_psf_start[];
+#define PSF_TER_U22N _binary_assets_ter_u22n_psf_start
+
 #define PSF1_MAGIC1 0x36
 #define PSF1_MAGIC2 0x04
 
@@ -57,5 +63,7 @@ void psf2_draw_char(uint8_t *font_data, uint16_t uc,
 
 uint32_t psf_get_width(uint8_t *font_data);
 uint32_t psf_get_height(uint8_t *font_data);
+
+int psf_check_ver(uint8_t *font_data);
 
 #endif /* UTILS_PSF_H */

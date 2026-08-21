@@ -3,10 +3,7 @@
 #include <drivers/video/framebuffer.h>
 #include <arch/x86_64/cpu.h>
 #include <utils/psf.h>
-
-extern uint8_t _binary_assets_ter_u16n_psf_start[];
-extern uint8_t _binary_assets_ter_u22n_psf_start[];
-
+#include <drivers/video/vdcon.h>
 void kernel_main(void)
 {
 	serial_con_init();
@@ -16,8 +13,12 @@ void kernel_main(void)
 	}
 	serial_con_puts("Hi ;)\n");
 	framebuffer_init();
+	vdcon_init();
 
-	psf1_draw_char(_binary_assets_ter_u16n_psf_start, 'A', 10, 10, 0xFFFFFF, 0);
-	psf2_draw_char(_binary_assets_ter_u22n_psf_start, 'B', 10, 25, 0xFFFFFF, 0);
+	vdcon_puts("Hello World!\n");
+	vdcon_switch_font(PSF_TER_U22N);
+	vdcon_puts("Hello World!\n");
+
+
 	cpu_hang();
 }
