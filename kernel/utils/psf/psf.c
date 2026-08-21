@@ -49,3 +49,22 @@ int psf_check_ver(uint8_t *font_data)
 	} else 
 		return 0;
 }
+
+/* supports all psf versions */
+void psf_draw_char(uint8_t *font_data, uint16_t uc, 
+	uint64_t x, uint64_t y, 
+	uint32_t fg, uint32_t bg)
+{
+	switch (psf_check_ver(font_data)) {
+		case 1: {
+			psf1_draw_char(font_data, uc, x, y, fg, bg);
+			return;
+		}
+		case 2: {
+			psf2_draw_char(font_data, uc, x, y, fg, bg);
+			return;
+		}
+		default: 
+			return;
+	}
+}

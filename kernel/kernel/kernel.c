@@ -4,6 +4,7 @@
 #include <arch/x86_64/cpu.h>
 #include <utils/psf.h>
 #include <drivers/video/vdcon.h>
+#include <kernel/kernel.h>
 void kernel_main(void)
 {
 	serial_con_init();
@@ -14,11 +15,26 @@ void kernel_main(void)
 	serial_con_puts("Hi ;)\n");
 	framebuffer_init();
 	vdcon_init();
-
-	vdcon_puts("Hello World!\n");
 	vdcon_switch_font(PSF_TER_U22N);
-	vdcon_puts("Hello World!\n");
 
+	klog(0, "vdcon Initialized\n");
 
 	cpu_hang();
+}
+
+void klog(int lvl, const char *msg)
+{
+	/* reserve 0 for nothing ;) */
+	switch (lvl) {
+		case 1:
+			vdcon_set_fg(0xd68720);
+			break;
+		case 2:
+			vdcon_set_fg(0xe03731);
+			break;
+	}
+	vdcon_puts(msg);
+	serial_con_puts(msg);
+	
+	vdcon_set_fg(0xFFFFFF);
 }

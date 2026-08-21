@@ -12,6 +12,7 @@ static uint32_t font_width, font_height;
 static uint8_t *font = PSF_TER_U16N;
 static uint64_t max_char_x, max_char_y;
 static bool font_is_psf1;
+
 void vdcon_init(void)
 {
 	cursor_x = 0;
@@ -55,10 +56,10 @@ void vdcon_putc(char c)
 			return;
 	}
 
-	if (font_is_psf1)
-		psf1_draw_char(font, c, cursor_x * font_width, cursor_y * font_height, fg, bg);
-	else
-		psf2_draw_char(font, c, cursor_x * font_width, cursor_y * font_height, fg, bg);
+	psf_draw_char(font, c, 
+		cursor_x * font_width, 
+		cursor_y * font_height, 
+		fg, bg);
 
 	if (cursor_x++ >= max_char_x)
 		insert_newline();
@@ -76,4 +77,14 @@ void vdcon_switch_font(uint8_t *font_data)
 	font_is_psf1 = psf_check_ver(font) == 1 ? true : false;
 	font_width = psf_get_width(font);
 	font_height = psf_get_height(font);
+}
+
+void vdcon_set_fg(uint32_t col)
+{
+	fg = col;
+}
+
+void vdcon_set_bg(uint32_t col)
+{
+	bg = col;
 }

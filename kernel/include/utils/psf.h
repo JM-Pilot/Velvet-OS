@@ -66,4 +66,8 @@ uint32_t psf_get_height(uint8_t *font_data);
 
 int psf_check_ver(uint8_t *font_data);
 
+void psf_draw_char(uint8_t *font_data, uint16_t uc, 
+	uint64_t x, uint64_t y, 
+	uint32_t fg, uint32_t bg);
+
 #endif /* UTILS_PSF_H */
