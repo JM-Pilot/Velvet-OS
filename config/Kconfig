@@ -1,4 +1,4 @@
-menu "Velvet OS Configuration"
+menu "Velvet Kernel Configuration"
 
 source "config/kernel/drivers/uart/Kconfig"
 
