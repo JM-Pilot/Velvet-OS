@@ -5,3 +5,6 @@ bin/
 
 .config
 .config.old
+
+# dont push other's config file
+kernel/include/config.h
